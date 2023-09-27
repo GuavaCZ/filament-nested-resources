@@ -1,0 +1,34 @@
+{
+    "name": "guava/filament-nested-resources",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Guava\\Filament\\NestedResources\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lukas Frey",
+            "email": "lukas.frey@guava.cz"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "filament/filament": "^3.0.0",
+        "spatie/laravel-package-tools": "^1.15",
+        "livewire/livewire": "^3.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0",
+        "laravel/pint": "^1.11"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Guava\\Filament\\NestedResources\\NestedResourcesServiceProvider"
+            ]
+        }
+    }
+}
