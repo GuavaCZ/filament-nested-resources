@@ -6,11 +6,12 @@ use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\CreateRecord;
-use function Guava\Filament\NestedResources\get_resource_route_parameter;
 use Guava\Filament\NestedResources\Resources\NestedResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Livewire\Livewire;
+
+use function Guava\Filament\NestedResources\get_resource_route_parameter;
 
 trait NestedPage
 {

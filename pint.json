@@ -7,6 +7,7 @@
     },
     "types_spaces": {
       "space": "single"
-    }
+    },
+    "concat_space": false
   }
 }
