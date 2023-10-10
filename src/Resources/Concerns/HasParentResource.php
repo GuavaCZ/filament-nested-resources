@@ -14,6 +14,6 @@ trait HasParentResource
             return $resource;
         }
 
-        throw new \InvalidArgumentException('Parent resource needs to be set on nested resource: ' . static::class);
+        throw new \InvalidArgumentException('Parent resource needs to be set on nested resource: '.static::class);
     }
 }
