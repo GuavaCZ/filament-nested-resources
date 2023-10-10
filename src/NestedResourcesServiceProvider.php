@@ -11,15 +11,10 @@ class NestedResourcesServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('filament-nested-resources')
-            ->hasTranslations()
         ;
     }
 
     public function packageBooted(): void
     {
-//        FilamentAsset::register([
-//            AlpineComponent::make('tutorial', __DIR__.'/../resources/js/dist/components/tutorial.js'),
-//            AlpineComponent::make('step', __DIR__.'/../resources/js/dist/components/step.js'),
-//        ], package: 'guava/tutorials');
     }
 }

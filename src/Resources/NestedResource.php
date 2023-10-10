@@ -35,6 +35,6 @@ class NestedResource extends Resource
         $resource = static::getParentResource();
         $parameter = get_resource_route_parameter($resource);
 
-        return $resource::getSlug().'/{'.$parameter.'?}/'.parent::getSlug();
+        return $resource::getSlug() . '/{' . $parameter . '?}/' . parent::getSlug();
     }
 }
