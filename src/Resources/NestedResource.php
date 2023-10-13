@@ -2,7 +2,6 @@
 
 namespace Guava\Filament\NestedResources\Resources;
 
-use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\ViewRecord;
