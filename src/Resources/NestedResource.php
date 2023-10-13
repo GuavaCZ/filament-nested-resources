@@ -2,8 +2,10 @@
 
 namespace Guava\Filament\NestedResources\Resources;
 
+use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\Page;
+use Filament\Resources\Pages\ViewRecord;
 use Filament\Resources\Resource;
 use Guava\Filament\NestedResources\Ancestor;
 use Guava\Filament\NestedResources\Concerns\HasAncestor;
@@ -91,16 +93,26 @@ abstract class NestedResource extends Resource
                 ...(filled($breadcrumb) ? [$breadcrumb] : []),
             ];
         } else {
-            //            $breadcrumbs = [
-            //                ...$breadcrumbs,
-            //                ...(filled($breadcrumb) ? [$breadcrumb.'2'] : []),
-            //            ];
+
+            $pageTypes = match (true) {
+                $page instanceof ViewRecord => ['view', 'edit'],
+                default => ['edit', 'view'],
+            };
+
+            foreach ($pageTypes as $pageType) {
+                if ($resource::hasPage($pageType) && $resource::can($pageType, $record)) {
+                    $recordBreadcrumb = [$resource::getUrl($pageType, [
+                        ...$ancestor ? $ancestor->getNormalizedRouteParameters($record) : [],
+                        'record' => $record,
+                    ]) => $record->id];
+
+                    break;
+                }
+            }
+
             $breadcrumbs = [
                 ...$breadcrumbs,
-                $resource::getUrl('edit', [
-                    ...$ancestor ? $ancestor->getNormalizedRouteParameters($record) : [],
-                    'record' => $record,
-                ]) => $record->id,
+                ...$recordBreadcrumb,
             ];
         }
 

@@ -14,6 +14,16 @@ class NestedRelationManager extends RelationManager
         return Filament::getModelResource($this->getRelationship()->getRelated());
     }
 
+    protected function configureViewAction(Tables\Actions\ViewAction $action): void
+    {
+        parent::configureViewAction(
+            $action->url(fn (Model $record) => static::getResource()::getUrl('view', [
+                ...static::getResource()::getAncestor()->getNormalizedRouteParameters($this->getOwnerRecord()),
+                'record' => $record,
+            ]))
+        );
+    }
+
     protected function configureCreateAction(Tables\Actions\CreateAction $action): void
     {
         parent::configureCreateAction(
