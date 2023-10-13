@@ -43,6 +43,7 @@ class Ancestor
             // will re-sync the depth again.
             if ($ancestor->getResource()::getModel() === $related::class) {
                 $parameters[$ancestor->getRouteParameterName()] = $related->id;
+
                 continue;
             }
 

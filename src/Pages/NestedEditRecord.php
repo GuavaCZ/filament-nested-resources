@@ -14,8 +14,9 @@ class NestedEditRecord extends EditRecord
         $resource = static::getResource();
         $ancestor = $resource::getAncestor();
 
-        if (!$ancestor) {
+        if (! $ancestor) {
             parent::configureDeleteAction($action);
+
             return;
         }
 
