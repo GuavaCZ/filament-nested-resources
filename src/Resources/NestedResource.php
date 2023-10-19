@@ -2,19 +2,20 @@
 
 namespace Guava\Filament\NestedResources\Resources;
 
-use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Resources\Resource;
 use Guava\Filament\NestedResources\Ancestor;
 use Guava\Filament\NestedResources\Concerns\HasAncestor;
+use Guava\Filament\NestedResources\Concerns\HasBreadcrumbTitleAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 abstract class NestedResource extends Resource
 {
     use HasAncestor;
+    use HasBreadcrumbTitleAttribute;
 
     public static function getSlug(): string
     {
@@ -104,7 +105,7 @@ abstract class NestedResource extends Resource
                     $recordBreadcrumb = [$resource::getUrl($pageType, [
                         ...$ancestor ? $ancestor->getNormalizedRouteParameters($record) : [],
                         'record' => $record,
-                    ]) => $record->id];
+                    ]) => $record->{$resource::getBreadcrumbTitleAttribute()}];
 
                     break;
                 }
