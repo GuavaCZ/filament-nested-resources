@@ -27,8 +27,8 @@ class NestedEditRecord extends EditRecord
             ->successRedirectUrl(
                 $resource::hasPage('index')
                     ? $resource::getUrl('index', [
-                    ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
-                ])
+                        ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
+                    ])
                     : $ancestorResource::getUrl('edit', [
                         ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
                     ])
