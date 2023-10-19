@@ -25,7 +25,8 @@ class NestedCreateRecord extends CreateRecord
     {
         $id = Arr::last($this->getRouteParameterIds());
         $ancestor = static::getResource()::getAncestor();
-        $record = $ancestor->getResource()::getModel()::find($id);
+        $recordRouteKeyName = $ancestor->getResource()::getRecordRouteKeyName() ?? 'id';
+        $record = $ancestor->getResource()::getModel()::firstWhere($recordRouteKeyName, $id);
         $fake = new (static::getModel())();
         /** @var BelongsTo $relation */
         $relation = $fake->{$ancestor->getRelationship()}();

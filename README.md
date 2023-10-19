@@ -158,6 +158,16 @@ The plugin will work either way, but the difference is that the breadcrumb URLs 
 
 If it exists, it will redirect to the index page (which might be a little confusing) and if it does NOT exist, it will redirect to the Parent Resource's Edit page. Since there's a relation manager, you will still have a list of all records.
 
+### Customizing the breadcrumb
+By default, the breadcrumbs will display the ID of the record(s). When `recordTitleAttribute` is set, the breadcrumbs will display that attribute instead.
+
+To customize only the breadcrumb attribute, you can override the `breadcrumbTitleAttribute` on your `NestedResource`:
+
+So for example to display the `name` of each record in the breadcrumb:
+```php
+protected static ?string $breadcrumbTitleAttribute = 'name';
+```
+
 ## Contributing
 
 Please see [CONTRIBUTING](./.github/CONTRIBUTING.md) for details.

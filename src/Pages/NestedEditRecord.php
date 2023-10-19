@@ -26,7 +26,9 @@ class NestedEditRecord extends EditRecord
             ->authorize($resource::canDelete($this->getRecord()))
             ->successRedirectUrl(
                 $resource::hasPage('index')
-                    ? $resource::getUrl('index')
+                    ? $resource::getUrl('index', [
+                    ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
+                ])
                     : $ancestorResource::getUrl('edit', [
                         ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
                     ])

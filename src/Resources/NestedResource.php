@@ -54,7 +54,8 @@ abstract class NestedResource extends Resource
         // If page has no record (such as create pages)
         $id = Arr::last($page->getRouteParameterIds());
         if ($ancestor) {
-            $relatedRecord = $record ? $ancestor->getRelatedModel($record) : $ancestor->getResource()::getModel()::find($id);
+            $recordRouteKeyName = $ancestor->getResource()::getRecordRouteKeyName() ?? 'id';
+            $relatedRecord = $record ? $ancestor->getRelatedModel($record) : $ancestor->getResource()::getModel()::firstWhere($recordRouteKeyName, $id);
         }
 
         if ($ancestor) {
