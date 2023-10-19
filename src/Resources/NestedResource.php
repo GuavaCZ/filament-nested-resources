@@ -119,4 +119,23 @@ abstract class NestedResource extends Resource
 
         return $breadcrumbs;
     }
+
+    public static function getGlobalSearchResultUrl(Model $record): ?string
+    {
+        if (static::hasPage('edit') && static::canEdit($record)) {
+            return static::getUrl('edit', [
+                ...static::getAncestor()->getNormalizedRouteParameters($record),
+                'record' => $record,
+            ]);
+        }
+
+        if (static::hasPage('view') && static::canView($record)) {
+            return static::getUrl('view', [
+                ...static::getAncestor()->getNormalizedRouteParameters($record),
+                'record' => $record,
+            ]);
+        }
+
+        return parent::getGlobalSearchResultUrl($record);
+    }
 }
