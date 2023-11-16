@@ -2,6 +2,7 @@
 
 namespace Guava\Filament\NestedResources\Resources;
 
+use Filament\Panel;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\ViewRecord;
@@ -11,6 +12,7 @@ use Guava\Filament\NestedResources\Concerns\HasAncestor;
 use Guava\Filament\NestedResources\Concerns\HasBreadcrumbTitleAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 
 abstract class NestedResource extends Resource
 {
@@ -138,5 +140,31 @@ abstract class NestedResource extends Resource
         }
 
         return parent::getGlobalSearchResultUrl($record);
+    }
+
+    public static function getRouteBaseName(string $panel = null): string
+    {
+        return preg_replace('/.\{[^}]*\}/', '', parent::getRouteBaseName($panel));
+    }
+
+    public static function routes(Panel $panel): void
+    {
+        $slug = static::getSlug();
+
+        Route::name(
+            (string) str($slug)
+                ->replace('/', '.')
+                ->replaceMatches('/.\{[^}]*\}/', '')
+                ->append('.'),
+        )
+            ->prefix($slug)
+            ->middleware(static::getRouteMiddleware($panel))
+            ->withoutMiddleware(static::getWithoutRouteMiddleware($panel))
+            ->group(function () use ($panel) {
+                foreach (static::getPages() as $name => $page) {
+                    $page->registerRoute($panel)?->name($name);
+                }
+            })
+        ;
     }
 }
