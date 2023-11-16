@@ -2,15 +2,17 @@
 
 namespace Guava\Filament\NestedResources\Resources;
 
-use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Pages\Page;
-use Filament\Resources\Pages\ViewRecord;
+use Filament\Panel;
+use Illuminate\Support\Arr;
 use Filament\Resources\Resource;
+use Filament\Resources\Pages\Page;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Resources\Pages\ViewRecord;
+use Filament\Resources\Pages\ListRecords;
 use Guava\Filament\NestedResources\Ancestor;
 use Guava\Filament\NestedResources\Concerns\HasAncestor;
 use Guava\Filament\NestedResources\Concerns\HasBreadcrumbTitleAttribute;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 abstract class NestedResource extends Resource
 {
@@ -27,6 +29,27 @@ abstract class NestedResource extends Resource
         }
 
         return parent::getSlug();
+    }
+
+    public static function routes(Panel $panel): void
+    {
+        $slug = static::getSlug();
+
+        Route::name(
+            (string) str(
+                preg_replace_array('|/{.*?}/|', ['/'], $slug)
+            )
+                ->replace('/', '.')
+                ->append('.'),
+        )
+            ->prefix($slug)
+            ->middleware(static::getRouteMiddleware($panel))
+            ->withoutMiddleware(static::getWithoutRouteMiddleware($panel))
+            ->group(function () use ($panel) {
+                foreach (static::getPages() as $name => $page) {
+                    $page->registerRoute($panel)?->name($name);
+                }
+            });
     }
 
     public static function shouldRegisterNavigation(): bool
@@ -47,7 +70,7 @@ abstract class NestedResource extends Resource
         $ancestor = $resource::getAncestor();
 
         // If no record passed
-        if (! ($page instanceof ListRecords)) {
+        if (!($page instanceof ListRecords)) {
             $record ??= $page->getRecord();
         }
 
@@ -70,7 +93,6 @@ abstract class NestedResource extends Resource
                         ...$ancestor->getNormalizedRouteParameters($record ?? $relatedRecord),
                     ]) . '#relation-manager' => $resource::getBreadcrumb(),
                 ];
-
         } else {
             $index = [$resource::getUrl('index') => $resource::getBreadcrumb()];
         }
