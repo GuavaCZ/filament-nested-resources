@@ -4,6 +4,7 @@ namespace Guava\Filament\NestedResources\Resources;
 
 use Filament\Panel;
 use Illuminate\Support\Arr;
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,17 @@ abstract class NestedResource extends Resource
                     $page->registerRoute($panel)?->name($name);
                 }
             });
+    }
+
+    public static function getRouteBaseName(?string $panel = null): string
+    {
+        $panel ??= Filament::getCurrentPanel()->getId();
+
+        return (string) str(
+            preg_replace_array('|/{.*?}/|', ['/'], static::getSlug())
+        )
+            ->replace('/', '.')
+            ->prepend("filament.{$panel}.resources.");
     }
 
     public static function shouldRegisterNavigation(): bool
