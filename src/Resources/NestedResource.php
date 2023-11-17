@@ -12,6 +12,7 @@ use Guava\Filament\NestedResources\Concerns\HasAncestor;
 use Guava\Filament\NestedResources\Concerns\HasBreadcrumbTitleAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 
 abstract class NestedResource extends Resource
@@ -126,17 +127,31 @@ abstract class NestedResource extends Resource
     public static function getGlobalSearchResultUrl(Model $record): ?string
     {
         if (static::hasPage('edit') && static::canEdit($record)) {
-            return static::getUrl('edit', [
-                ...static::getAncestor()->getNormalizedRouteParameters($record),
-                'record' => $record,
-            ]);
+            return static::getUrl(
+                'edit',
+                collect([
+                    'record' => $record->id,
+                ])
+                    ->when(
+                        $ancestor = static::getAncestor(),
+                        fn (Collection $collection) => $collection->mergeRecursive(...$ancestor->getNormalizedRouteParameters($record))
+                    )
+                    ->toArray()
+            );
         }
 
         if (static::hasPage('view') && static::canView($record)) {
-            return static::getUrl('view', [
-                ...static::getAncestor()->getNormalizedRouteParameters($record),
-                'record' => $record,
-            ]);
+            return static::getUrl(
+                'view',
+                collect([
+                    'record' => $record->id,
+                ])
+                    ->when(
+                        $ancestor = static::getAncestor(),
+                        fn (Collection $collection) => $collection->merge($ancestor->getNormalizedRouteParameters($record))
+                    )
+                    ->toArray()
+            );
         }
 
         return parent::getGlobalSearchResultUrl($record);
