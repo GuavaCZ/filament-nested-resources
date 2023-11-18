@@ -66,6 +66,7 @@ class NestedListRecords extends ListRecords
                         ...static::getResource()::getAncestor()->getNormalizedRouteParameters($record),
                         'record' => $record,
                     ]))
-            );
+            )
+        ;
     }
 }
