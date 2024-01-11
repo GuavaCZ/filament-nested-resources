@@ -97,6 +97,7 @@ class AlbumResource extends NestedResource
         return Ancestor::make(
             ArtistResource::class, // Parent Resource Class
             // Optionally you can pass a relationship name, if it's non-standard. The plugin will try to guess it otherwise
+            // e.g. the 'morphable' method of a morphTo relationship
         );
     }
 }
