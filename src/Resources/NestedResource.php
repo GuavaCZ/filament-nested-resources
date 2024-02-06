@@ -41,7 +41,7 @@ abstract class NestedResource extends Resource
         return parent::shouldRegisterNavigation();
     }
 
-    public static function getBreadcrumbs(Page $page, Model $record = null): array
+    public static function getBreadcrumbs(Page $page, ?Model $record = null): array
     {
         $resource = static::class;
 
@@ -157,7 +157,7 @@ abstract class NestedResource extends Resource
         return parent::getGlobalSearchResultUrl($record);
     }
 
-    public static function getRouteBaseName(string $panel = null): string
+    public static function getRouteBaseName(?string $panel = null): string
     {
         return preg_replace('/.\{[^}]*\}/', '', parent::getRouteBaseName($panel));
     }

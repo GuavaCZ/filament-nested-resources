@@ -8,7 +8,6 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Resources\Resource;
 
 class NestedEditRecord extends EditRecord
 {
@@ -60,11 +59,11 @@ class NestedEditRecord extends EditRecord
             ->successRedirectUrl(
                 $resource::hasPage('index')
                     ? $resource::getUrl('index', [
-                    ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
-                ])
+                        ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
+                    ])
                     : $ancestorResource::getUrl('edit', [
-                    ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
-                ])
+                        ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
+                    ])
             )
         ;
     }

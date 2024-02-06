@@ -72,7 +72,7 @@ class Ancestor
         ])->first();
     }
 
-    public static function make(string $resource, string $relationship = null)
+    public static function make(string $resource, ?string $relationship = null)
     {
         return app(static::class, [
             'resource' => $resource,
