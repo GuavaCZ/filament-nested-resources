@@ -3,6 +3,7 @@
 namespace Guava\Filament\NestedResources;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class Ancestor
 {
@@ -66,7 +67,9 @@ class Ancestor
 
     public function getRelatedModel(Model $record): Model
     {
-        return $record->{$this->getRelationship()};
+        return $record->{$this->getRelationship()}()->withoutGlobalScopes([
+            SoftDeletingScope::class,
+        ])->first();
     }
 
     public static function make(string $resource, string $relationship = null)

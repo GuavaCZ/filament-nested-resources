@@ -3,10 +3,12 @@
 namespace Guava\Filament\NestedResources\Pages;
 
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Resource;
 
 class NestedEditRecord extends EditRecord
 {
@@ -35,6 +37,34 @@ class NestedEditRecord extends EditRecord
                     : $ancestorResource::getUrl('edit', [
                         ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
                     ])
+            )
+        ;
+    }
+
+    protected function configureForceDeleteAction(ForceDeleteAction $action): void
+    {
+
+        $resource = static::getResource();
+        $ancestor = $resource::getAncestor();
+
+        if (! $ancestor) {
+            parent::configureForceDeleteAction($action);
+
+            return;
+        }
+
+        $ancestorResource = $ancestor->getResource();
+
+        $action
+            ->authorize($resource::canForceDelete($this->getRecord()))
+            ->successRedirectUrl(
+                $resource::hasPage('index')
+                    ? $resource::getUrl('index', [
+                    ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
+                ])
+                    : $ancestorResource::getUrl('edit', [
+                    ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
+                ])
             )
         ;
     }
