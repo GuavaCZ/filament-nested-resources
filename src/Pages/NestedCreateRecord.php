@@ -2,10 +2,11 @@
 
 namespace Guava\Filament\NestedResources\Pages;
 
+use Illuminate\Support\Arr;
 use Filament\Resources\Pages\CreateRecord;
 use Guava\Filament\NestedResources\Ancestor;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Arr;
 
 class NestedCreateRecord extends CreateRecord
 {
@@ -31,6 +32,10 @@ class NestedCreateRecord extends CreateRecord
         $fake = new (static::getModel())();
         /** @var BelongsTo $relation */
         $relation = $fake->{$ancestor->getRelationship()}();
+
+        if ($relation instanceof MorphTo) {
+            return [$relation->getForeignKeyName() => $record->id, $relation->getMorphType() => get_class($record)];
+        }
 
         return [$relation->getForeignKeyName() => $record->id];
     }
