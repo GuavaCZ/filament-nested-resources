@@ -26,18 +26,17 @@ class NestedEditRecord extends EditRecord
 
         $ancestorResource = $ancestor->getResource();
 
+        $urlParameters = $ancestor->getNormalizedRouteParameters($this->getRecord());
+
+        $redirectUrl = match (true) {
+            $resource::hasPage('index') => $resource::getUrl('index', $urlParameters),
+            $ancestorResource::hasPage('view') => $ancestorResource::getUrl('view', $urlParameters),
+            default => $ancestorResource::getUrl('edit', $urlParameters),
+        };
+
         $action
             ->authorize($resource::canDelete($this->getRecord()))
-            ->successRedirectUrl(
-                $resource::hasPage('index')
-                    ? $resource::getUrl('index', [
-                        ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
-                    ])
-                    : $ancestorResource::getUrl('edit', [
-                        ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
-                    ])
-            )
-        ;
+            ->successRedirectUrl($redirectUrl);
     }
 
     protected function configureForceDeleteAction(ForceDeleteAction $action): void
@@ -54,18 +53,17 @@ class NestedEditRecord extends EditRecord
 
         $ancestorResource = $ancestor->getResource();
 
+        $urlParameters = $ancestor->getNormalizedRouteParameters($this->getRecord());
+
+        $redirectUrl = match (true) {
+            $resource::hasPage('index') => $resource::getUrl('index', $urlParameters),
+            $ancestorResource::hasPage('view') => $ancestorResource::getUrl('view', $urlParameters),
+            default => $ancestorResource::getUrl('edit', $urlParameters),
+        };
+
         $action
             ->authorize($resource::canForceDelete($this->getRecord()))
-            ->successRedirectUrl(
-                $resource::hasPage('index')
-                    ? $resource::getUrl('index', [
-                        ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
-                    ])
-                    : $ancestorResource::getUrl('edit', [
-                        ...$ancestor->getNormalizedRouteParameters($this->getRecord()),
-                    ])
-            )
-        ;
+            ->successRedirectUrl($redirectUrl);
     }
 
     protected function configureViewAction(ViewAction $action): void
