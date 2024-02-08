@@ -15,7 +15,6 @@ class NestedCreateRecord extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $ancestor = $this->getAncestorRecord();
-        dd($ancestor);
 
         return parent::mutateFormDataBeforeCreate([
             ...$data,
