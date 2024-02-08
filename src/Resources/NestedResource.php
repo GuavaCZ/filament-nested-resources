@@ -62,18 +62,14 @@ abstract class NestedResource extends Resource
         }
 
         if ($ancestor) {
-            $index = $resource::hasPage('index')
-                ? [
-                    $resource::getUrl('index', [
-                        ...$ancestor->getNormalizedRouteParameters($record ?? $relatedRecord),
-                    ]) => $resource::getBreadcrumb(),
-                ]
-                : [
-                    $ancestor->getResource()::getUrl('edit', [
-                        ...$ancestor->getNormalizedRouteParameters($record ?? $relatedRecord),
-                    ]) . '#relation-manager' => $resource::getBreadcrumb(),
-                ];
+            $ancestorResource = $ancestor->getResource();
+            $urlParameters = $ancestor->getNormalizedRouteParameters($record ?? $relatedRecord);
 
+            $index = match (true) {
+                $resource::hasPage('index') =>  [$resource::getUrl('index', $urlParameters) => $resource::getBreadcrumb()],
+                $ancestorResource::hasPage('view') => [$ancestorResource::getUrl('view', $urlParameters) . '#relation-manager' => $resource::getBreadcrumb()],
+                default => [$ancestorResource::getUrl('edit', $urlParameters) . '#relation-manager' => $resource::getBreadcrumb()],
+            };
         } else {
             $index = [$resource::getUrl('index') => $resource::getBreadcrumb()];
         }
