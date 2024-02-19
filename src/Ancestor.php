@@ -1,15 +1,17 @@
 <?php
 
-namespace Guava\Filament\NestedResources;
+namespace Guava\FilamentNestedResources;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Str;
 
 class Ancestor
 {
     public function __construct(
         protected string $resource,
-        protected ?string $relationship = null,
+        protected string $relationshipName,
+        protected string $inverseRelationshipName,
     ) {
     }
 
@@ -18,65 +20,55 @@ class Ancestor
         return $this->resource;
     }
 
-    public function getRelationship(): string
+    public function getRelationshipName(): string
     {
-        if (! $this->relationship) {
-            return $this->getResource()::getModelLabel();
+        return $this->relationshipName;
+    }
+
+    public function getInverseRelationshipName(): ?string
+    {
+        return $this->inverseRelationshipName;
+    }
+
+    public function getRelationship(Model $record)
+    {
+        if (method_exists($record, $this->getRelationshipName())) {
+            return $record->{$this->getRelationshipName()}();
         }
 
-        return $this->relationship;
+        if (method_exists($record, Str::plural($this->getRelationshipName()))) {
+            return $record->{Str::plural($this->getRelationshipName())}();
+        }
+
+        return null;
     }
 
-    public function getRouteParameterName(): string
+    public function getInverseRelationship(Model $record): ?Relation
     {
-        return get_resource_route_parameter($this->getResource());
+        if (method_exists($record, $this->getInverseRelationshipName())) {
+            return $record->{$this->getInverseRelationshipName()}();
+        }
+
+        return null;
     }
 
-    public function getRouteParameters(Model $record): array
+    public function getRelatedRecord(Model $record): ?Model
     {
-        $ancestor = $this;
-        $related = $record;
+        $relationship = $this->getInverseRelationship($record);
 
-        $parameters = [];
-        do {
-            $recordRouteKeyName = $ancestor->getResource()::getRecordRouteKeyName() ?? 'id';
-            // For 'create' actions, a model is not yet created, so the owner record is being sent.
-            // In this case, the ancestor relation and received model are offset by one level and this
-            // will re-sync the depth again.
-            if ($ancestor->getResource()::getModel() === $related::class) {
-                $parameters[$ancestor->getRouteParameterName()] = $related->{$recordRouteKeyName};
+        if ($relationship->exists()) {
+            return $relationship->first();
+        }
 
-                continue;
-            }
-
-            $related = $ancestor->getRelatedModel($related);
-            $parameters[$ancestor->getRouteParameterName()] = $related->{$recordRouteKeyName};
-        } while ($ancestor = $ancestor->getResource()::getAncestor());
-
-        return $parameters;
+        return null;
     }
 
-    public function getNormalizedRouteParameters(Model $record): array
-    {
-        return array_values(
-            array_reverse(
-                $this->getRouteParameters($record)
-            )
-        );
-    }
-
-    public function getRelatedModel(Model $record): Model
-    {
-        return $record->{$this->getRelationship()}()->withoutGlobalScopes([
-            SoftDeletingScope::class,
-        ])->first();
-    }
-
-    public static function make(string $resource, string $relationship = null)
+    public static function make(string $resource, string $relationshipName, string $inverseRelationshipName)
     {
         return app(static::class, [
             'resource' => $resource,
-            'relationship' => $relationship,
+            'relationshipName' => $relationshipName,
+            'inverseRelationshipName' => $inverseRelationshipName,
         ]);
     }
 }

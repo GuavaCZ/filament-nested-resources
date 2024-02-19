@@ -1,6 +1,6 @@
 <?php
 
-namespace Guava\Filament\NestedResources;
+namespace Guava\FilamentNestedResources;
 
 use Filament;
 use Filament\Contracts\Plugin;

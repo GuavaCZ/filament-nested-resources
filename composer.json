@@ -3,11 +3,8 @@
     "type": "library",
     "license": "MIT",
     "autoload": {
-        "files": [
-            "src/helpers.php"
-        ],
         "psr-4": {
-            "Guava\\Filament\\NestedResources\\": "src/"
+            "Guava\\FilamentNestedResources\\": "src/"
         }
     },
     "authors": [
@@ -30,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Guava\\Filament\\NestedResources\\NestedResourcesServiceProvider"
+                "Guava\\FilamentNestedResources\\NestedResourcesServiceProvider"
             ]
         }
     }

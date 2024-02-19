@@ -7,6 +7,9 @@
 
 Filament Nested Resources allows you to create nested resources of any depth. This is useful for resources which are too complex for relation manager, yet don't make sense as a standalone resource.
 
+### Beta is here, with a much simpler and customizable implementation!
+#### Warning: The beta and alpha versions are not compatible, as the beta is a complete rewrite of the package. Upgrading is easy though and described below.
+
 ## Showcase
 
 ![Screenshot 1](https://github.com/GuavaCZ/filament-nested-resources/raw/alpha/docs/images/screenshot_01.png)
@@ -33,23 +36,13 @@ In the examples: ArtistResource > AlbumResource > SongResource
 
 Artist would be the root resource, the other would be child resources.
 
-### TL;DR
-Replace all extends of `Resource`, `RelationManager`, `Page` classes with their corresponding `Nested` variants.  
+### Quick start
 
-So instead of extending `Resource`, extend `NestedResource`, instead of extending `EditRecord`, extend `NestedEditRecord` and so on.
+In order to set up Nested Resources, you need to do these steps:
 
-Where applicable (in child resources), implement `getAncestor` to define the parent of the nested resource.
-
-Optionally remove `index` page for child nested resources.
-
-### Detailed usage
-
-In order to make to set up Nested Resources, you need to do these steps:
-
-1. Extend `NestedResource` on your root resource and all child resources you want to nest under your root resource.
-2. On your child `NestedResources`, implement the `getAncestor()` method and return an instance of the `Ancestor` config.
-3. On your **child** `NestedResource` pages, extend the corresponding `Nested[Context]Record`. So instead of `EditRecord`, extend `NestedEditRecord` and so on.
-4. Create a `RelationManager` to bind the Resources together. Extend `NestedRelationManager` instead of `RelationManager`.
+1. On the resources (root and all child resources) you want to nest, add the `NestedResource` trait. You will be required to implement the `getAncestor` method. For the root resource, return `null`, for all child resources implement it according to the documentation below.
+2. On every page of the resources from the 1st step, add the `NestedPage` trait.
+3. Create a `RelationManager` ([Filament documentation](https://filamentphp.com/docs/3.x/panels/resources/relation-managers#creating-a-relation-manager)) or a `RelationPage` ([Filament documentation](https://filamentphp.com/docs/3.x/panels/resources/relation-managers#relation-pages)) to bind the Resources together. Add the `NestedRelationManager` trait to either of them.
 
 Let's imagine the scenario from the Showcase screenshots, where we have this schema:
 1. Artist Model.
@@ -59,17 +52,42 @@ Let's imagine the scenario from the Showcase screenshots, where we have this sch
 First we create `ArtistResource`:
 
 ```php
-use Guava\Filament\NestedResources\Resources\NestedResource;
+use Filament\Resources\Resource;
+use Guava\FilamentNestedResources\Concerns\NestedResource;
 
-class ArtistResource extends NestedResource
+class ArtistResource extends Resource
 {
-    //
+    use NestedResource;
 
+    // If using Relation Manager:
     public static function getRelations(): array
     {
         return [
             AlbumsRelationManager::class,
         ];
+    }
+    
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListArtists::route('/'),
+            'create' => Pages\CreateArtist::route('/create'),
+            'edit' => Pages\EditArtist::route('/{record}/edit'),
+            'view' => Pages\ViewArtist::route('/{record}'),
+            
+            // In case of relation page.
+            // Make sure the name corresponds to the name of your actual relationship on the model.
+            'albums' => Pages\ManageArtistAlbums::route('/{record}/albums'),
+            
+            // Needed to create child records
+            // The name should be '{relationshipName}.create':
+            'albums.create' => Pages\CreateArtistAlbum::route('/{record}/albums/create'),
+        ];
+    }
+
+    public static function getAncestor(): ?Ancestor
+    {
+        return null;
     }
 }
 ```
@@ -77,12 +95,12 @@ class ArtistResource extends NestedResource
 Next, we create the `AlbumResource`:
 
 ```php
-use Guava\Filament\NestedResources\Resources\NestedResource;
-use Guava\Filament\NestedResources\Ancestor;
+use Filament\Resources\Resource;
+use Guava\FilamentNestedResources\Concerns\NestedResource;
 
-class AlbumResource extends NestedResource
+class AlbumResource extends Resource
 {
-    //
+    use NestedResource;
 
     public static function getRelations(): array
     {
@@ -93,80 +111,125 @@ class AlbumResource extends NestedResource
     
     public static function getAncestor() : ?Ancestor
     {
-        // This is just a simple configuration with a few helper methods
+        // Configure the ancestor (parent) relationship here
         return Ancestor::make(
             ArtistResource::class, // Parent Resource Class
-            // Optionally you can pass a relationship name, if it's non-standard. The plugin will try to guess it otherwise
-            // e.g. the 'morphable' method of a morphTo relationship
+            'albums', // Relationship name
+            'artist', // Inverse relationship name
         );
     }
 }
 ```
 
-For each page for our `AlbumResource`, we extend the corresponding NestedPage:
+In every page of our `ArtistResource` and `AlbumResource`, we add the `NestedPage` trait:
 
 ```php
-use Guava\Filament\NestedResources\Pages\NestedCreateRecord;
+use Filament\Resources\Pages\CreateRecord;
+use Guava\FilamentNestedResources\Concerns\NestedPage;
 
-class CreateAlbum extends NestedCreateRecord
+class CreateArtist extends CreateRecord
 {
+    use NestedPage;
+
     //
 }
 ```
 
 ```php
-use Guava\Filament\NestedResources\Pages\NestedEditRecord;
+use Filament\Resources\Pages\EditRecord;
+use Guava\FilamentNestedResources\Concerns\NestedPage;
 
-class EditAlbum extends NestedEditRecord
+class EditArtist extends EditRecord
 {
+    use NestedPage;
+    
     //
 }
 ```
 
 ```php
-use Guava\Filament\NestedResources\Pages\NestedListRecords;
+use Filament\Resources\Pages\ListRecords;
+use Guava\FilamentNestedResources\Concerns\NestedPage;
 
-class ListAlbums extends NestedListRecords
+class ListArtists extends ListRecords
 {
+    use NestedPage;
+
     //
 }
 ```
 
-And finally we create the `AlbumsRelationManager`. We just need to extend the `NestedRelationManager` class here:
+Now let`s create a new page which will be used to create child records. Let's create `CreateArtistAlbum` page inside `ArtistResource/Pages`:
 
 ```php
-use Guava\Filament\NestedResources\RelationManagers\NestedRelationManager;
+use Guava\FilamentNestedResources\Pages\CreateRelatedRecord;
+use Guava\FilamentNestedResources\Concerns\NestedPage;
 
-class AlbumsRelationManager extends NestedRelationManager
+class CreateArtistAlbum extends CreateRelatedRecord
 {
+    use NestedPage;
+
+    //
+}
+```
+Don\`t forget to register the page in the `getPages` method.
+
+And finally we create either the `AlbumsRelationManager` or if you prefer to use a Relation Page then create a `ManageArtistAlbums` page. We just need to add the `NestedRelationManager` trait here.
+
+For RelationManager:
+```php
+use Filament\Resources\RelationManagers\RelationManager;
+use Guava\FilamentNestedResources\Concerns\NestedRelationManager;
+
+class AlbumsRelationManager extends Relationmanager
+{
+    use NestedRelationManager;
     //
 }
 ```
 
-Optionally, we recommend deleting the `index` page from your child `NestedResources` (in this case AlbumResource):
-
+For RelationPage:
 ```php
-public static function getPages(): array
-    {
-        return [
-            'create' => Pages\CreateAlbum::route('/create'),
-            'edit' => Pages\EditAlbum::route('/{record}/edit'),
-        ];
-    }
+use Filament\Resources\Pages\ManageRelatedRecords;
+use Guava\FilamentNestedResources\Concerns\NestedPage;
+use Guava\FilamentNestedResources\Concerns\NestedRelationManager;
+
+class ManageArtistAlbums extends ManageRelatedRecords
+{
+    use NestedPage; // Since this is a standalone page, we also need this trait
+    use NestedRelationManager;
+
+    //
+}
 ```
 
-The plugin will work either way, but the difference is that the breadcrumb URLs will redirect to different pages based on whether the index page exists or not.
+Optionally, we recommend deleting the `index` and `create` pages from your child `NestedResources` (in this case AlbumResource).
 
-If it exists, it will redirect to the index page (which might be a little confusing) and if it does NOT exist, it will redirect to the Parent Resource's Edit page. Since there's a relation manager, you will still have a list of all records.
+### Customizing the breadcrumbs
+Every resource can control their own part of the breadcrumb, which by default consists of an `index` breadcrumb and a `detail` breadcrumb.
 
-### Customizing the breadcrumb
-By default, the breadcrumbs will display the ID of the record(s). When `recordTitleAttribute` is set, the breadcrumbs will display that attribute instead.
+The `index` breadcrumb typically redirects to the index page.
 
-To customize only the breadcrumb attribute, you can override the `breadcrumbTitleAttribute` on your `NestedResource`:
+The `detail` breadcrumb typically redirects to the detail (edit or view) and by default, will display the route key (ID if not configured otherwise) of the record. 
 
-So for example to display the `name` of each record in the breadcrumb:
+You can override the label via the `getBreadcrumbRecordLabel` method of a `NestedResource`:
+
 ```php
-protected static ?string $breadcrumbTitleAttribute = 'name';
+public static function getBreadcrumbRecordLabel(Model $record)
+{
+    return $record->first_name . ' ' . $record->last_name;
+}
+```
+
+Or you can override the resource\`s breadcrumb part completely, by overriding the `getBreadcrumbs` method on the resource:
+
+```php
+public static function getBreadcrumbs(Model $record, string $operation): array
+{
+    return [
+        'my-custom-url' => 'My custom label',
+];
+}
 ```
 
 ## Contributing

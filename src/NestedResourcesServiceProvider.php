@@ -1,6 +1,6 @@
 <?php
 
-namespace Guava\Filament\NestedResources;
+namespace Guava\FilamentNestedResources;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
