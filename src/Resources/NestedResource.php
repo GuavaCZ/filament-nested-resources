@@ -66,7 +66,7 @@ abstract class NestedResource extends Resource
             $urlParameters = $ancestor->getNormalizedRouteParameters($record ?? $relatedRecord);
 
             $index = match (true) {
-                $resource::hasPage('index') =>  [$resource::getUrl('index', $urlParameters) => $resource::getBreadcrumb()],
+                $resource::hasPage('index') => [$resource::getUrl('index', $urlParameters) => $resource::getBreadcrumb()],
                 $ancestorResource::hasPage('view') => [$ancestorResource::getUrl('view', $urlParameters) . '#relation-manager' => $resource::getBreadcrumb()],
                 default => [$ancestorResource::getUrl('edit', $urlParameters) . '#relation-manager' => $resource::getBreadcrumb()],
             };

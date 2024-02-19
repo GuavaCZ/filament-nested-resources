@@ -36,7 +36,8 @@ class NestedEditRecord extends EditRecord
 
         $action
             ->authorize($resource::canDelete($this->getRecord()))
-            ->successRedirectUrl($redirectUrl);
+            ->successRedirectUrl($redirectUrl)
+        ;
     }
 
     protected function configureForceDeleteAction(ForceDeleteAction $action): void
@@ -63,7 +64,8 @@ class NestedEditRecord extends EditRecord
 
         $action
             ->authorize($resource::canForceDelete($this->getRecord()))
-            ->successRedirectUrl($redirectUrl);
+            ->successRedirectUrl($redirectUrl)
+        ;
     }
 
     protected function configureViewAction(ViewAction $action): void
