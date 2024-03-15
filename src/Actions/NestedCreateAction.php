@@ -14,12 +14,14 @@ trait NestedCreateAction
         /** @var Ancestor $ancestor */
         $ancestor = $resource::getAncestor();
 
-        if (! $ancestor->getResource()::hasPage("{$ancestor->getRelationshipName()}.create")) {
-            throw new \Exception("{$ancestor->getResource()} does not have a nested create page. Please make sure to create it and that it is called '{$ancestor->getRelationshipName()}.create'. Check the documentation for more information.");
+        $ancestorResource = $ancestor->getResource($this->getOwnerRecord());
+
+        if (! $ancestorResource::hasPage("{$ancestor->getRelationshipName()}.create")) {
+            throw new \Exception("{$ancestorResource} does not have a nested create page. Please make sure to create it and that it is called '{$ancestor->getRelationshipName()}.create'. Check the documentation for more information.");
         }
 
         parent::configureCreateAction($action->url(
-            fn () => $ancestor->getResource()::getUrl("{$ancestor->getRelationshipName()}.create", [
+            fn () => $ancestorResource::getUrl("{$ancestor->getRelationshipName()}.create", [
                 'record' => $this->getOwnerRecord(),
             ])
         ));

@@ -16,6 +16,7 @@ use Filament\Support\Facades\FilamentView;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 use function Filament\Support\is_app_url;
@@ -195,7 +196,10 @@ class CreateRelatedRecord extends Page
         /** @var HasMany $relationship */
         if (($relationship = $this->getRelation()) instanceof HasMany) {
             $record->{$relationship->getForeignKeyName()} = $owner->getKey();
-            //            $record->{$relationship-()} = $owner->getKey();
+        }
+        if (($relationship = $this->getRelation()) instanceof MorphMany) {
+            $record->{$relationship->getForeignKeyName()} = $owner->getKey();
+            $record->{$relationship->getMorphType()} = $owner::class;
         }
 
         return $record;

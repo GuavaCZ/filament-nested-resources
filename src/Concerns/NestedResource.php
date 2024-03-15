@@ -47,10 +47,6 @@ trait NestedResource
 
     public static function shouldRegisterNavigation(): bool
     {
-        if ($ancestor = static::getAncestor()) {
-            return $ancestor->getResource() === static::class;
-        }
-
-        return parent::shouldRegisterNavigation();
+        return false;
     }
 }

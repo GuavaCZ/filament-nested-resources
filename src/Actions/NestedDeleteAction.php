@@ -13,8 +13,8 @@ trait NestedDeleteAction
             parent::configureDeleteAction($action);
         } catch (RouteNotFoundException) {
             if ($ancestor = static::getResource()::getAncestor()) {
-                $ancestorResource = $ancestor->getResource();
                 $related = $ancestor->getRelatedRecord($this->record);
+                $ancestorResource = $ancestor->getResource($related);
                 $operation = $this->getResourcePageName();
 
                 $action->successRedirectUrl(

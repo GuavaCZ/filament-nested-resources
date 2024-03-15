@@ -2,6 +2,7 @@
 
 namespace Guava\FilamentNestedResources;
 
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
@@ -9,15 +10,16 @@ use Illuminate\Support\Str;
 class Ancestor
 {
     public function __construct(
-        protected string $resource,
         protected string $relationshipName,
         protected string $inverseRelationshipName,
     ) {
     }
 
-    public function getResource(): string
+    public function getResource(Model $record): string
     {
-        return $this->resource;
+        $relationship = $this->getRelationship($record);
+        return Filament::getModelResource($relationship->getParent());
+//        return $this->resource;
     }
 
     public function getRelationshipName(): string
@@ -63,10 +65,9 @@ class Ancestor
         return null;
     }
 
-    public static function make(string $resource, string $relationshipName, string $inverseRelationshipName)
+    public static function make(string $relationshipName, string $inverseRelationshipName)
     {
         return app(static::class, [
-            'resource' => $resource,
             'relationshipName' => $relationshipName,
             'inverseRelationshipName' => $inverseRelationshipName,
         ]);

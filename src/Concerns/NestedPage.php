@@ -38,7 +38,7 @@ trait NestedPage
                 break;
             }
 
-            $resource = $resource::getAncestor()->getResource();
+            $resource = $resource::getAncestor()->getResource($record);
             $breadcrumbs = $resource::getBreadcrumbs($record, static::getResourcePageName()) + $breadcrumbs;
         }
 

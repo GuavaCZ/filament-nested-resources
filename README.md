@@ -36,6 +36,9 @@ In the examples: ArtistResource > AlbumResource > SongResource
 
 Artist would be the root resource, the other would be child resources.
 
+### Supported relationships
+Currently we support **one-to-many** and **polymoprhic one-to-many** relationships only.
+
 ### Quick start
 
 In order to set up Nested Resources, you need to do these steps:
@@ -113,7 +116,6 @@ class AlbumResource extends Resource
     {
         // Configure the ancestor (parent) relationship here
         return Ancestor::make(
-            ArtistResource::class, // Parent Resource Class
             'albums', // Relationship name
             'artist', // Inverse relationship name
         );
