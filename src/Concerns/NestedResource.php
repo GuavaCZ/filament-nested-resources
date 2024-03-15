@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait NestedResource
 {
-
     abstract public static function getAncestor(): ?Ancestor;
-
 
     public static function getBreadcrumbs(Model $record, string $operation): array
     {

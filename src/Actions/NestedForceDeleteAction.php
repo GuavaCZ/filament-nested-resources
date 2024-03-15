@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 trait NestedForceDeleteAction
 {
-    protected function configureForceDeleteAction(ForceDeleteAction|\Filament\Tables\Actions\ForceDeleteAction $action): void
+    protected function configureForceDeleteAction(ForceDeleteAction | \Filament\Tables\Actions\ForceDeleteAction $action): void
     {
         try {
             parent::configureForceDeleteAction($action);

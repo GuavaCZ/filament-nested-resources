@@ -10,9 +10,10 @@ trait NestedPage
     use NestedDeleteAction;
     use NestedForceDeleteAction;
 
-    public function mountNestedPage() {
-//        $resource = static::getResource();
-//        $ancestor = $resource::getAncestor();
+    public function mountNestedPage()
+    {
+        //        $resource = static::getResource();
+        //        $ancestor = $resource::getAncestor();
     }
 
     public function getBreadcrumbs(): array

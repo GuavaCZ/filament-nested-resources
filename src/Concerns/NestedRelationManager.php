@@ -9,6 +9,6 @@ use Guava\FilamentNestedResources\Actions\NestedViewAction;
 trait NestedRelationManager
 {
     use NestedCreateAction;
-    use NestedViewAction;
     use NestedEditAction;
+    use NestedViewAction;
 }

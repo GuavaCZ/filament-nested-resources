@@ -2,14 +2,12 @@
 
 namespace Guava\FilamentNestedResources\Actions;
 
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Filament\Actions\DeleteAction;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 trait NestedDeleteAction
 {
-
-
-    protected function configureDeleteAction(DeleteAction|\Filament\Tables\Actions\DeleteAction $action): void
+    protected function configureDeleteAction(DeleteAction | \Filament\Tables\Actions\DeleteAction $action): void
     {
         try {
             parent::configureDeleteAction($action);
