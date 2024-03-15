@@ -18,8 +18,9 @@ class Ancestor
     public function getResource(Model $record): string
     {
         $relationship = $this->getRelationship($record);
+
         return Filament::getModelResource($relationship->getParent());
-//        return $this->resource;
+        //        return $this->resource;
     }
 
     public function getRelationshipName(): string
