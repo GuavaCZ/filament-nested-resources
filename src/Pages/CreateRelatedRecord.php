@@ -176,15 +176,15 @@ class CreateRelatedRecord extends Page
     {
         $record = new ($this->getRelation()->getRelated())($data);
 
+        if ($owner = $this->getOwnerRecord()) {
+            $record = $this->associateRecordWithParent($record, $owner);
+        }
+
         if (
             static::getResource()::isScopedToTenant() &&
             ($tenant = Filament::getTenant())
         ) {
             return $this->associateRecordWithTenant($record, $tenant);
-        }
-
-        if ($owner = $this->getOwnerRecord()) {
-            $record = $this->associateRecordWithParent($record, $owner);
         }
         $record->save();
 
