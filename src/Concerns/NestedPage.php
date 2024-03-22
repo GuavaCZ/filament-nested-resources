@@ -22,7 +22,7 @@ trait NestedPage
             return parent::getBreadcrumbs();
         }
 
-        $record = $this->record;
+        $record = $this->record ?? $this->getOwnerRecord();
         $resource = static::getResource();
 
         if (! $record) {
