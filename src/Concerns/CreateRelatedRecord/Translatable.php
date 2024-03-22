@@ -11,7 +11,6 @@ use Livewire\Attributes\Locked;
 
 trait Translatable
 {
-
     use HasActiveLocaleSwitcher;
 
     protected ?string $oldActiveLocale = null;
