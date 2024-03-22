@@ -22,7 +22,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^8.0",
-        "laravel/pint": "^1.11"
+        "laravel/pint": "^1.11",
+        "filament/spatie-laravel-translatable-plugin": "^3.2"
     },
     "extra": {
         "laravel": {
