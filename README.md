@@ -7,8 +7,7 @@
 
 Filament Nested Resources allows you to create nested resources of any depth. This is useful for resources which are too complex for relation manager, yet don't make sense as a standalone resource.
 
-### Beta is here, with a much simpler and customizable implementation!
-#### Warning: The beta and alpha versions are not compatible, as the beta is a complete rewrite of the package. Upgrading is easy though and described below.
+### First public release is here.
 
 ## Showcase
 
