@@ -12,8 +12,8 @@ Filament Nested Resources allows you to create nested resources of any depth. Th
 
 ## Showcase
 
-![Screenshot 1](https://github.com/GuavaCZ/filament-nested-resources/raw/alpha/docs/images/screenshot_01.png)
-![Screenshot 2](https://github.com/GuavaCZ/filament-nested-resources/raw/alpha/docs/images/screenshot_02.png)
+![Screenshot 1](https://github.com/GuavaCZ/filament-nested-resources/raw/1.x/docs/images/screenshot_01.png)
+![Screenshot 2](https://github.com/GuavaCZ/filament-nested-resources/raw/1.x/docs/images/screenshot_02.png)
 
 ## Support us
 
