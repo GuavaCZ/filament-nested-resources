@@ -38,6 +38,10 @@ Artist would be the root resource, the other would be child resources.
 ### Supported relationships
 Currently we support **one-to-many** and **polymoprhic one-to-many** relationships only.
 
+### Demo Project
+To better understand how nested resources work and to troubleshoot any issues you might encounter, we've created a demo laravel project:  
+https://github.com/GuavaCZ/filament-nested-resources-demo
+
 ### Quick start
 
 In order to set up Nested Resources, you need to do these steps:
@@ -160,7 +164,7 @@ class ListArtists extends ListRecords
 }
 ```
 
-Now let`s create a new page which will be used to create child records. Let's create `CreateArtistAlbum` page inside `ArtistResource/Pages`:
+Now let\`s create a new page which will be used to create child records. Let's create `CreateArtistAlbum` page inside `ArtistResource/Pages`:
 
 ```php
 use Guava\FilamentNestedResources\Pages\CreateRelatedRecord;
@@ -169,6 +173,9 @@ use Guava\FilamentNestedResources\Concerns\NestedPage;
 class CreateArtistAlbum extends CreateRelatedRecord
 {
     use NestedPage;
+
+    // This page also needs to know the ancestor relationship used (just like relation managers):    
+    protected static string $relationship = 'albums';
 
     //
 }
