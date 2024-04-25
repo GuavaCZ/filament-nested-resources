@@ -81,8 +81,7 @@ class CreateRelatedRecord extends Page
 
     protected function authorizeAccess(): void
     {
-        // TODO: maybe need to switch resource to other resource
-        abort_unless(static::getResource()::canCreate(), 403);
+        abort_unless(Filament::getModelResource($this->getRelation()->getRelated())::canCreate(), 403);
     }
 
     protected function fillForm(): void
@@ -181,7 +180,7 @@ class CreateRelatedRecord extends Page
         }
 
         if (
-            static::getResource()::isScopedToTenant() &&
+            Filament::getModelResource($record)::isScopedToTenant() &&
             ($tenant = Filament::getTenant())
         ) {
             return $this->associateRecordWithTenant($record, $tenant);
@@ -207,7 +206,7 @@ class CreateRelatedRecord extends Page
 
     protected function associateRecordWithTenant(Model $record, Model $tenant): Model
     {
-        $relationship = static::getResource()::getTenantRelationship($tenant);
+        $relationship = Filament::getModelResource($record)::getTenantRelationship($tenant);
 
         if ($relationship instanceof HasManyThrough) {
             $record->save();
