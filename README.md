@@ -189,7 +189,7 @@ For RelationManager:
 use Filament\Resources\RelationManagers\RelationManager;
 use Guava\FilamentNestedResources\Concerns\NestedRelationManager;
 
-class AlbumsRelationManager extends Relationmanager
+class AlbumsRelationManager extends RelationManager
 {
     use NestedRelationManager;
     //
