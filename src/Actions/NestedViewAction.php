@@ -13,7 +13,7 @@ trait NestedViewAction
         parent::configureViewAction($action);
 
         $action->url(
-            fn (Model $record) => Filament::getModelResource($record)::getUrl(
+            fn (Model $record) => static::getNestedResource($record)::getUrl(
                 'view',
                 ['record' => $record],
             )

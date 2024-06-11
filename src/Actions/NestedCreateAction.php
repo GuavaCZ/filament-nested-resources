@@ -2,7 +2,6 @@
 
 namespace Guava\FilamentNestedResources\Actions;
 
-use Filament\Facades\Filament;
 use Filament\Tables\Actions\CreateAction;
 use Guava\FilamentNestedResources\Ancestor;
 
@@ -10,7 +9,8 @@ trait NestedCreateAction
 {
     protected function configureCreateAction(CreateAction $action): void
     {
-        $resource = Filament::getModelResource($this->getRelationship()->getRelated());
+        $resource = static::getNestedResource();
+
         /** @var Ancestor $ancestor */
         $ancestor = $resource::getAncestor();
 

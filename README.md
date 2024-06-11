@@ -39,7 +39,7 @@ Artist would be the root resource, the other would be child resources.
 Currently we support **one-to-many** and **polymoprhic one-to-many** relationships only.
 
 ### Demo Project
-To better understand how nested resources work and to troubleshoot any issues you might encounter, we've created a demo laravel project:  
+To better understand how nested resources work and to troubleshoot any issues you might encounter, we've created a demo laravel project:
 https://github.com/GuavaCZ/filament-nested-resources-demo
 
 ### Quick start
@@ -72,7 +72,7 @@ class ArtistResource extends Resource
             AlbumsRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -80,11 +80,11 @@ class ArtistResource extends Resource
             'create' => Pages\CreateArtist::route('/create'),
             'edit' => Pages\EditArtist::route('/{record}/edit'),
             'view' => Pages\ViewArtist::route('/{record}'),
-            
+
             // In case of relation page.
             // Make sure the name corresponds to the name of your actual relationship on the model.
             'albums' => Pages\ManageArtistAlbums::route('/{record}/albums'),
-            
+
             // Needed to create child records
             // The name should be '{relationshipName}.create':
             'albums.create' => Pages\CreateArtistAlbum::route('/{record}/albums/create'),
@@ -114,7 +114,7 @@ class AlbumResource extends Resource
             // Repeat the same for Song Resource
         ];
     }
-    
+
     public static function getAncestor() : ?Ancestor
     {
         // Configure the ancestor (parent) relationship here
@@ -147,7 +147,7 @@ use Guava\FilamentNestedResources\Concerns\NestedPage;
 class EditArtist extends EditRecord
 {
     use NestedPage;
-    
+
     //
 }
 ```
@@ -174,10 +174,12 @@ class CreateArtistAlbum extends CreateRelatedRecord
 {
     use NestedPage;
 
-    // This page also needs to know the ancestor relationship used (just like relation managers):    
+    // This page also needs to know the ancestor relationship used (just like relation managers):
     protected static string $relationship = 'albums';
 
-    //
+    // We can usually guess the related resource, but if your app has multiple resources
+    // for this model, you will need to explicitly define the resource
+    // public static string $nestedResource = AlbumResource::class;
 }
 ```
 Don\`t forget to register the page in the `getPages` method.
@@ -192,7 +194,10 @@ use Guava\FilamentNestedResources\Concerns\NestedRelationManager;
 class AlbumsRelationManager extends RelationManager
 {
     use NestedRelationManager;
-    //
+
+    // We can usually guess the related resource, but if your app has multiple resources
+    // for this model, you will need to explicitly define the resource
+    // public static string $nestedResource = AlbumResource::class;
 }
 ```
 
@@ -218,7 +223,7 @@ Every resource can control their own part of the breadcrumb, which by default co
 
 The `index` breadcrumb typically redirects to the index page.
 
-The `detail` breadcrumb typically redirects to the detail (edit or view) and by default, will display the route key (ID if not configured otherwise) of the record. 
+The `detail` breadcrumb typically redirects to the detail (edit or view) and by default, will display the route key (ID if not configured otherwise) of the record.
 
 You can override the label via the `getBreadcrumbRecordLabel` method of a `NestedResource`:
 
