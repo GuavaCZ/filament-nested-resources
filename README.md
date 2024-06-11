@@ -177,8 +177,8 @@ class CreateArtistAlbum extends CreateRelatedRecord
     // This page also needs to know the ancestor relationship used (just like relation managers):
     protected static string $relationship = 'albums';
 
-    // We can usually guess the related resource, but if your app has multiple resources
-    // for this model, you will need to explicitly define the resource
+    // We can usually guess the nested resource, but if your app has multiple resources for this
+    // model, you will need to explicitly define it
     // public static string $nestedResource = AlbumResource::class;
 }
 ```
@@ -195,8 +195,8 @@ class AlbumsRelationManager extends RelationManager
 {
     use NestedRelationManager;
 
-    // We can usually guess the related resource, but if your app has multiple resources
-    // for this model, you will need to explicitly define the resource
+    // We can usually guess the nested resource, but if your app has multiple resources for this
+    // model, you will need to explicitly define the it
     // public static string $nestedResource = AlbumResource::class;
 }
 ```
