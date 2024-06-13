@@ -17,12 +17,12 @@ trait NestedRelationManager
     use NestedEditAction;
     use NestedViewAction;
 
-    public static function getNestedResource(?Model $record = null): string
+    public function getNestedResource(?Model $record = null): string
     {
         if (property_exists(static::class, 'nestedResource')) {
             return static::$nestedResource;
         }
 
-        return Filament::getModelResource($record ?? static::getRelationship()->getRelated());
+        return Filament::getModelResource($record ?? $this->getRelationship()->getRelated());
     }
 }

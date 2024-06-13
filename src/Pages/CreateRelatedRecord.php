@@ -84,7 +84,7 @@ class CreateRelatedRecord extends Page
 
     protected function authorizeAccess(): void
     {
-        abort_unless(static::getNestedResource()::canCreate(), 403);
+        abort_unless($this->getNestedResource()::canCreate(), 403);
     }
 
     protected function fillForm(): void
@@ -183,7 +183,7 @@ class CreateRelatedRecord extends Page
         }
 
         if (
-            static::getNestedResource($record)::isScopedToTenant() &&
+            $this->getNestedResource($record)::isScopedToTenant() &&
             ($tenant = Filament::getTenant())
         ) {
             return $this->associateRecordWithTenant($record, $tenant);
@@ -209,7 +209,7 @@ class CreateRelatedRecord extends Page
 
     protected function associateRecordWithTenant(Model $record, Model $tenant): Model
     {
-        $relationship = static::getNestedResource($record)::getTenantRelationship($tenant);
+        $relationship = $this->getNestedResource($record)::getTenantRelationship($tenant);
 
         if ($relationship instanceof HasManyThrough) {
             $record->save();
@@ -284,7 +284,7 @@ class CreateRelatedRecord extends Page
      */
     protected function getForms(): array
     {
-        $resource = static::getNestedResource();
+        $resource = $this->getNestedResource();
 
         return [
             'form' => $this->form($resource::form(
@@ -303,13 +303,13 @@ class CreateRelatedRecord extends Page
         return 'data';
     }
 
-    public static function getNestedResource(?Model $record = null): string
+    public function getNestedResource(?Model $record = null): string
     {
         if (property_exists(static::class, 'nestedResource')) {
             return static::$nestedResource;
         }
 
-        return Filament::getModelResource($record ?? static::getRelation()->getRelated());
+        return Filament::getModelResource($record ?? $this->getRelation()->getRelated());
     }
 
     public static function canCreateAnother(): bool
@@ -324,7 +324,7 @@ class CreateRelatedRecord extends Page
 
     protected function getRedirectUrl(): string
     {
-        $resource = static::getNestedResource($this->getRecord());
+        $resource = $this->getNestedResource($this->getRecord());
 
         if ($resource::hasPage('view') && $resource::canView($this->getRecord())) {
             return $resource::getUrl('view', ['record' => $this->getRecord(), ...$this->getRedirectUrlParameters()]);

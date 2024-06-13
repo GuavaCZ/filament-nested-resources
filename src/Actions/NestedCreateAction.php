@@ -9,7 +9,7 @@ trait NestedCreateAction
 {
     protected function configureCreateAction(CreateAction $action): void
     {
-        $resource = static::getNestedResource();
+        $resource = $this->getNestedResource();
 
         /** @var Ancestor $ancestor */
         $ancestor = $resource::getAncestor();

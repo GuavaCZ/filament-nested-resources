@@ -13,7 +13,7 @@ trait NestedEditAction
         parent::configureEditAction($action);
 
         $action->url(
-            fn (Model $record) => static::getNestedResource($record)::getUrl(
+            fn (Model $record) => $this->getNestedResource($record)::getUrl(
                 'edit',
                 ['record' => $record],
             )
