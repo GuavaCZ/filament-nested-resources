@@ -3,10 +3,10 @@
 namespace Guava\FilamentNestedResources\Concerns;
 
 use Filament\Facades\Filament;
-use Illuminate\Database\Eloquent\Model;
+use Guava\FilamentNestedResources\Actions\NestedCreateAction;
 use Guava\FilamentNestedResources\Actions\NestedEditAction;
 use Guava\FilamentNestedResources\Actions\NestedViewAction;
-use Guava\FilamentNestedResources\Actions\NestedCreateAction;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $nestedResource

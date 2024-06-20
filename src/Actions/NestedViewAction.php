@@ -2,7 +2,6 @@
 
 namespace Guava\FilamentNestedResources\Actions;
 
-use Filament\Facades\Filament;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Model;
 

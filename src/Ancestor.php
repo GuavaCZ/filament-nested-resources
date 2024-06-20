@@ -12,8 +12,7 @@ class Ancestor
     public function __construct(
         protected string $relationshipName,
         protected string $inverseRelationshipName,
-    ) {
-    }
+    ) {}
 
     public function getResource(Model $record): string
     {

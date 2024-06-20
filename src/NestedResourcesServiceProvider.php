@@ -14,7 +14,5 @@ class NestedResourcesServiceProvider extends PackageServiceProvider
         ;
     }
 
-    public function packageBooted(): void
-    {
-    }
+    public function packageBooted(): void {}
 }
