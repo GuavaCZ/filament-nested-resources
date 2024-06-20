@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 use function Filament\Support\is_app_url;
 
+/**
+ * @property string $nestedResource
+ */
 class CreateRelatedRecord extends Page
 {
     use HasUnsavedDataChangesAlert;
@@ -81,7 +84,7 @@ class CreateRelatedRecord extends Page
 
     protected function authorizeAccess(): void
     {
-        abort_unless(Filament::getModelResource($this->getRelation()->getRelated())::canCreate(), 403);
+        abort_unless($this->getNestedResource()::canCreate(), 403);
     }
 
     protected function fillForm(): void
@@ -180,7 +183,7 @@ class CreateRelatedRecord extends Page
         }
 
         if (
-            Filament::getModelResource($record)::isScopedToTenant() &&
+            $this->getNestedResource($record)::isScopedToTenant() &&
             ($tenant = Filament::getTenant())
         ) {
             return $this->associateRecordWithTenant($record, $tenant);
@@ -206,7 +209,7 @@ class CreateRelatedRecord extends Page
 
     protected function associateRecordWithTenant(Model $record, Model $tenant): Model
     {
-        $relationship = Filament::getModelResource($record)::getTenantRelationship($tenant);
+        $relationship = $this->getNestedResource($record)::getTenantRelationship($tenant);
 
         if ($relationship instanceof HasManyThrough) {
             $record->save();
@@ -281,7 +284,7 @@ class CreateRelatedRecord extends Page
      */
     protected function getForms(): array
     {
-        $resource = Filament::getModelResource($this->getRelation()->getRelated());
+        $resource = $this->getNestedResource();
 
         return [
             'form' => $this->form($resource::form(
@@ -300,6 +303,15 @@ class CreateRelatedRecord extends Page
         return 'data';
     }
 
+    public function getNestedResource(?Model $record = null): string
+    {
+        if (property_exists(static::class, 'nestedResource')) {
+            return static::$nestedResource;
+        }
+
+        return Filament::getModelResource($record ?? $this->getRelation()->getRelated());
+    }
+
     public static function canCreateAnother(): bool
     {
         return static::$canCreateAnother;
@@ -312,7 +324,7 @@ class CreateRelatedRecord extends Page
 
     protected function getRedirectUrl(): string
     {
-        $resource = Filament::getModelResource($this->getRecord());
+        $resource = $this->getNestedResource($this->getRecord());
 
         if ($resource::hasPage('view') && $resource::canView($this->getRecord())) {
             return $resource::getUrl('view', ['record' => $this->getRecord(), ...$this->getRedirectUrlParameters()]);
