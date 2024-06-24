@@ -1,16 +1,16 @@
 {
-    "name": "guava/filament-nested-resources",
+    "name": "danilogiacomi/filament-nested-resources",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Guava\\FilamentNestedResources\\": "src/"
+            "DaniloGiacomi\\FilamentNestedResources\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "Lukas Frey",
-            "email": "lukas.frey@guava.cz"
+            "name": "Danilo Giacomi",
+            "email": "daniogiacomi@gmail.com"
         }
     ],
     "minimum-stability": "stable",
@@ -28,7 +28,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Guava\\FilamentNestedResources\\NestedResourcesServiceProvider"
+                "DaniloGiacomi\\FilamentNestedResources\\NestedResourcesServiceProvider"
             ]
         }
     }
