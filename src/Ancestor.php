@@ -42,6 +42,10 @@ class Ancestor
             return $record->{Str::plural($this->getRelationshipName())}();
         }
 
+        if ($record->relationResolver($record::class, $this->getRelationshipName()) ){
+            return $record->{$this->getRelationshipName()}();
+        }
+
         return null;
     }
 
@@ -51,6 +55,10 @@ class Ancestor
             return $record->{$this->getInverseRelationshipName()}();
         }
 
+        if ($record->relationResolver($record::class, $this->getInverseRelationshipName()) != null){
+            return $record->{$this->getInverseRelationshipName()}();
+        }
+        
         return null;
     }
 
