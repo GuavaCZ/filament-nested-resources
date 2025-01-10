@@ -9,8 +9,12 @@ trait NestedCreateAction
 {
     protected function configureCreateAction(CreateAction $action): void
     {
-        $resource = $this->getNestedResource();
+        if (static::$ignoreCreateTrait === true) {
+            return;
+        }
 
+        $resource = $this->getNestedResource();
+        
         /** @var Ancestor $ancestor */
         $ancestor = $resource::getAncestor();
 
