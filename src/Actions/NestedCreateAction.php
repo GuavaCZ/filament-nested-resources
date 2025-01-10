@@ -9,7 +9,7 @@ trait NestedCreateAction
 {
     protected function configureCreateAction(CreateAction $action): void
     {
-        if (static::$ignoreCreateTrait === true) {
+        if (isset(static::$ignoreCreateTrait) && static::$ignoreCreateTrait === true) {
             return;
         }
 
