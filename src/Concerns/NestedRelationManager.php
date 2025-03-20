@@ -25,4 +25,9 @@ trait NestedRelationManager
 
         return Filament::getModelResource($record ?? $this->getRelationship()->getRelated());
     }
+
+    public function getBreadcrumb(): string
+    {
+        return static::$breadcrumb ?? __('filament-panels::resources/pages/list-records.breadcrumb');
+    }
 }

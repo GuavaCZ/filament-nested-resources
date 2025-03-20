@@ -2,8 +2,10 @@
 
 namespace Guava\FilamentNestedResources\Concerns;
 
+use Filament\Resources\Pages\ManageRelatedRecords;
 use Guava\FilamentNestedResources\Actions\NestedDeleteAction;
 use Guava\FilamentNestedResources\Actions\NestedForceDeleteAction;
+use Guava\FilamentNestedResources\Pages\CreateRelatedRecord;
 
 trait NestedPage
 {
@@ -42,5 +44,16 @@ trait NestedPage
         }
 
         return $breadcrumbs + ['' => $this->getBreadcrumb()];
+    }
+
+    public function getTitle(): string
+    {
+        return static::$title ?? match (true) {
+            $this instanceof CreateRelatedRecord => __('filament-panels::resources/pages/create-record.title', [
+                'label' => static::getNestedResource()::getTitleCaseModelLabel(),
+            ]),
+            $this instanceof ManageRelatedRecords && in_array(NestedPage::class, class_uses_recursive($this)) => static::getNestedResource()::getTitleCasePluralModelLabel(),
+            default => parent::getTitle(),
+        };
     }
 }
