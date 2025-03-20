@@ -18,23 +18,22 @@ trait NestedPage
 
     public function getBreadcrumbs(): array
     {
+        /** @var \Guava\FilamentNestedResources\Pages\CreateRelatedRecord|\Guava\FilamentNestedResources\Concerns\NestedPage $this */
         if (in_array(static::getResourcePageName(), ['index', 'create'])) {
             return parent::getBreadcrumbs();
         }
 
+        /** @var \Illuminate\Database\Eloquent\Model */
         $record = $this->record ?? $this->getOwnerRecord();
+        /** @var class-string<\Guava\FilamentNestedResources\Concerns\NestedResource> */
         $resource = static::getResource();
-
-        if (! $record) {
-            $record = $this->getOwnerRecord();
-        }
 
         $breadcrumbs = $resource::getBreadcrumbs($record, static::getResourcePageName());
 
         while ($ancestor = $resource::getAncestor()) {
 
             $record = $ancestor->getRelatedRecord($record);
-            if (! $record) {
+            if (!$record) {
                 break;
             }
 
@@ -42,6 +41,6 @@ trait NestedPage
             $breadcrumbs = $resource::getBreadcrumbs($record, static::getResourcePageName()) + $breadcrumbs;
         }
 
-        return $breadcrumbs + ['#' => $this->getBreadcrumb()];
+        return $breadcrumbs + ['' => $this->getBreadcrumb()];
     }
 }
