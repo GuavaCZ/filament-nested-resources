@@ -274,6 +274,11 @@ class CreateRelatedRecord extends Page
         ;
     }
 
+    public function getBreadcrumb(): string
+    {
+        return static::$breadcrumb ?? __('filament-panels::resources/pages/create-record.breadcrumb');
+    }
+
     public function form(Form $form): Form
     {
         return $form;
