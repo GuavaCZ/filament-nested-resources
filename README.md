@@ -245,6 +245,13 @@ public static function getBreadcrumbs(Model $record, string $operation): array
 }
 ```
 
+### Overriding NestedCreateAction
+By default a create page must be created when using a `NestedRelationManager`. You can disable this by adding the following to your `ManageRelatedRecords`. This allows you to configure the create action yourself i.e. make it a `slideOver` instead of redirecting to a new page.
+
+```php 
+public static bool $ignoreCreateTrait = false;
+```
+
 ## Contributing
 
 Please see [CONTRIBUTING](./.github/CONTRIBUTING.md) for details.
