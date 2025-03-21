@@ -35,7 +35,7 @@ trait NestedPage
         while ($ancestor = $resource::getAncestor()) {
 
             $record = $ancestor->getRelatedRecord($record);
-            if (!$record) {
+            if (! $record) {
                 break;
             }
 

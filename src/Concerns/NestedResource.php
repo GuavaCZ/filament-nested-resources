@@ -30,7 +30,7 @@ trait NestedResource
         $relationUrl = null;
         $relationLabel = null;
         $operationDetail = $operation;
-        if (!in_array($operation, ['view', 'edit']) && $resource::hasPage($operation)) {
+        if (! in_array($operation, ['view', 'edit']) && $resource::hasPage($operation)) {
             $operationPage = Arr::get($resource::getPages(), $operation)?->getPage();
             if (
                 $operationPage &&
