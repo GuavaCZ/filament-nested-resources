@@ -44,7 +44,7 @@ trait NestedResource
                 ]);
                 $relationLabel = $operationPage::getNavigationLabel();
                 if (is_a($operationPage, CreateRelatedRecord::class, true)) {
-                    $relationName = $operationPage::getRelationship();
+                    $relationName = $operationPage::getRelationshipName();
                     $operationBasePage = Arr::get($resource::getPages(), $relationName)?->getPage();
                     if (
                         $operationBasePage &&

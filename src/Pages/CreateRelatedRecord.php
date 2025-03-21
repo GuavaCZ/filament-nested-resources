@@ -55,14 +55,14 @@ class CreateRelatedRecord extends Page
         $this->previousUrl = url()->previous();
     }
 
-    public function getRelation(): Relation
+    public function getRelationship(): Relation
     {
-        $relationship = static::getRelationship();
+        $relationship = static::getRelationshipName();
 
         return $this->getOwnerRecord()->{$relationship}();
     }
 
-    public static function getRelationship(): string
+    public static function getRelationshipName(): string
     {
         return static::$relationship;
     }
@@ -176,7 +176,7 @@ class CreateRelatedRecord extends Page
      */
     protected function handleRecordCreation(array $data): Model
     {
-        $record = new ($this->getRelation()->getRelated())($data);
+        $record = new ($this->getRelationship()->getRelated())($data);
 
         if ($owner = $this->getOwnerRecord()) {
             $record = $this->associateRecordWithParent($record, $owner);
@@ -196,10 +196,10 @@ class CreateRelatedRecord extends Page
     protected function associateRecordWithParent(Model $record, Model $owner)
     {
         /** @var HasMany $relationship */
-        if (($relationship = $this->getRelation()) instanceof HasMany) {
+        if (($relationship = $this->getRelationship()) instanceof HasMany) {
             $record->{$relationship->getForeignKeyName()} = $owner->getKey();
         }
-        if (($relationship = $this->getRelation()) instanceof MorphMany) {
+        if (($relationship = $this->getRelationship()) instanceof MorphMany) {
             $record->{$relationship->getForeignKeyName()} = $owner->getKey();
             $record->{$relationship->getMorphType()} = $owner::class;
         }
@@ -295,7 +295,7 @@ class CreateRelatedRecord extends Page
             'form' => $this->form($resource::form(
                 $this->makeForm()
                     ->operation('create')
-                    ->model($this->getRelation()->getRelated()::class)
+                    ->model($this->getRelationship()->getRelated()::class)
                     ->statePath($this->getFormStatePath())
                     ->columns($this->hasInlineLabels() ? 1 : 2)
                     ->inlineLabel($this->hasInlineLabels()),
@@ -314,7 +314,7 @@ class CreateRelatedRecord extends Page
             return static::$nestedResource;
         }
 
-        return Filament::getModelResource($record ?? $this->getRelation()->getRelated());
+        return Filament::getModelResource($record ?? $this->getRelationship()->getRelated());
     }
 
     public static function canCreateAnother(): bool
