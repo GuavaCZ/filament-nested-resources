@@ -43,6 +43,8 @@ class CreateRelatedRecord extends Page
 
     protected static bool $canCreateAnother = true;
 
+    public ?string $previousUrl = null;
+
     public function mount(int | string $record): void
     {
         $this->ownerRecord = $this->resolveRecord($record);
